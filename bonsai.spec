@@ -90,7 +90,7 @@ install -m 755 addcheckin.pl \
 		trapdoor \
 		%{buildroot}%{_datadir}/%{name}/bin
 
-install -d -m 755 %{buildroot}%{_localstatedir}/%{name}
+install -d -m 755 %{buildroot}%{_localstatedir}/lib/%{name}
 install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}
 
 install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}
@@ -126,5 +126,5 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/%{name}
 %{_var}/www/%{name}
 %{_datadir}/%{name}
-%attr(-,apache,apache) %{_localstatedir}/%{name}
+%attr(-,apache,apache) %{_localstatedir}/lib/%{name}
 
