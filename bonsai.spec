@@ -1,7 +1,7 @@
 %define name		bonsai
 %define version		1.3.9
 %define snapshot	20051228
-%define release		%mkrel 0.%{snapshot}.5
+%define release		%mkrel 0.%{snapshot}.6
 
 %define _requires_exceptions perl(\\(CGI.pl\\|SourceChecker\\))
 
@@ -16,11 +16,10 @@ Source0:	%{name}-%{snapshot}.tar.bz2
 Source1:	%{name}.README.mdk.bz2
 Patch0:		%{name}-20051228.fhs.patch
 Requires:	perl-DBD-mysql
-# webapp macros and scriptlets
-Requires(post):		rpm-helper >= 0.16-2mdv2007.0
-Requires(postun):	rpm-helper >= 0.16-2mdv2007.0
-BuildRequires:	rpm-helper >= 0.16-2mdv2007.0
-BuildRequires:	rpm-mandriva-setup >= 1.23-1mdv2007.0
+%if %mdkversion < 201010
+Requires(post):   rpm-helper
+Requires(postun):   rpm-helper
+%endif
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 
@@ -114,10 +113,14 @@ EOF
 rm -rf %{buildroot}
 
 %post
+%if %mdkversion < 201010
 %_post_webapp
+%endif
 
 %postun
+%if %mdkversion < 201010
 %_postun_webapp
+%endif
 
 %files
 %defattr(-,root,root)
@@ -127,4 +130,3 @@ rm -rf %{buildroot}
 %{_var}/www/%{name}
 %{_datadir}/%{name}
 %attr(-,apache,apache) %{_localstatedir}/lib/%{name}
-
