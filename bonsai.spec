@@ -1,7 +1,7 @@
 %define name		bonsai
 %define version		1.3.9
 %define snapshot	20051228
-%define release		%mkrel 0.%{snapshot}.6
+%define release		%mkrel 0.%{snapshot}.7
 
 %define _requires_exceptions perl(\\(CGI.pl\\|SourceChecker\\))
 
