@@ -1,0 +1,830 @@
+diff -Naur bonsai/CGI.pl bonsai.fhs/CGI.pl
+--- bonsai/CGI.pl	2005-12-15 22:45:56.000000000 +0100
++++ bonsai.fhs/CGI.pl	2005-12-29 13:42:21.000000000 +0100
+@@ -249,7 +249,7 @@
+           print "</ul>\n";
+      };
+      
+-     if (open(EXTRA, "<data/cvsmenuextra")) {
++     if (open(EXTRA, "</var/lib/bonsai/cvsmenuextra")) {
+           while (<EXTRA>) {
+                print $_;
+           }
+diff -Naur bonsai/SourceChecker.cgi bonsai.fhs/SourceChecker.cgi
+--- bonsai/SourceChecker.cgi	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/SourceChecker.cgi	2005-12-29 13:09:03.000000000 +0100
+@@ -29,6 +29,7 @@
+ #               ...
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ use CGI;
+diff -Naur bonsai/addcheckin.pl bonsai.fhs/addcheckin.pl
+--- bonsai/addcheckin.pl	2004-12-01 07:12:25.000000000 +0100
++++ bonsai.fhs/addcheckin.pl	2005-12-29 13:39:50.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'globals.pl';
+ 
+ use vars qw($BatchID @TreeList @LegalDirs);
+@@ -86,12 +87,12 @@
+                          split(/\|/, $line);
+                     
+                     ($mungedname = $repository) =~ s!/!_!g;
+-                    $filename = "data/taginfo/$mungedname/" .
++                    $filename = "/var/lib/bonsai/taginfo/$mungedname/" .
+                          MungeTagName($tagname);
+                     
+                     Lock();
+-                    unless (-d "data/taginfo/$mungedname") {
+-                        mkpath(["data/taginfo/$mungedname"], 1, 0777);
++                    unless (-d "/var/lib/bonsai/taginfo/$mungedname") {
++                        mkpath(["/var/lib/bonsai/taginfo/$mungedname"], 1, 0777);
+                     }
+                     if (open(TAGFILE, ">> $filename")) {
+                          print TAGFILE "$tagtime|" . join('|', @data) .  "\n";
+@@ -122,9 +123,9 @@
+      unless ($forcetreeid) {
+           ($mungedname = $repository) =~ s!/!_!g;
+           $mungedname =~ s!^_!!;
+-          $filename = "data/checkinlog/$mungedname";
+-          unless (-d "data/checkinlog") {
+-              mkpath(["data/checkinlog"], 1, 0777);
++          $filename = "/var/lib/bonsai/checkinlog/$mungedname";
++          unless (-d "/var/lib/bonsai/checkinlog") {
++              mkpath(["/var/lib/bonsai/checkinlog"], 1, 0777);
+           }
+           if (open(TID, ">> $filename")) {
+                print TID "${appendjunk}LOGCOMMENT\n$plainlog:ENDLOGCOMMENT\n";
+diff -Naur bonsai/admin.cgi bonsai.fhs/admin.cgi
+--- bonsai/admin.cgi	2004-12-01 01:32:48.000000000 +0100
++++ bonsai.fhs/admin.cgi	2005-12-29 13:03:14.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'CGI.pl';
+ 
+ use strict;
+diff -Naur bonsai/adminmail.pl bonsai.fhs/adminmail.pl
+--- bonsai/adminmail.pl	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/adminmail.pl	2005-12-29 13:14:34.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'globals.pl';
+ require 'adminfuncs.pl';
+ 
+diff -Naur bonsai/countcheckins.cgi bonsai.fhs/countcheckins.cgi
+--- bonsai/countcheckins.cgi	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/countcheckins.cgi	2005-12-29 13:06:06.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require 'CGI.pl';
+diff -Naur bonsai/createlegaldirs.pl bonsai.fhs/createlegaldirs.pl
+--- bonsai/createlegaldirs.pl	2005-12-11 05:04:50.000000000 +0100
++++ bonsai.fhs/createlegaldirs.pl	2005-12-29 13:14:42.000000000 +0100
+@@ -19,6 +19,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'globals.pl';
+ 
+ sub add_module {
+diff -Naur bonsai/cvsblame.cgi bonsai.fhs/cvsblame.cgi
+--- bonsai/cvsblame.cgi	2004-12-01 18:08:06.000000000 +0100
++++ bonsai.fhs/cvsblame.cgi	2005-12-29 13:06:16.000000000 +0100
+@@ -39,6 +39,7 @@
+ #    mark - highlight a line
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/cvsblame.pl bonsai.fhs/cvsblame.pl
+--- bonsai/cvsblame.pl	2005-11-14 10:02:48.000000000 +0100
++++ bonsai.fhs/cvsblame.pl	2005-12-29 13:14:53.000000000 +0100
+@@ -31,6 +31,7 @@
+ #
+ ##############################################################################
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/cvsgraph.cgi bonsai.fhs/cvsgraph.cgi
+--- bonsai/cvsgraph.cgi	2005-12-15 22:54:54.000000000 +0100
++++ bonsai.fhs/cvsgraph.cgi	2005-12-29 13:38:38.000000000 +0100
+@@ -19,6 +19,7 @@
+ #
+ # Contributor(s): Jacob Steenhagen <jake@acutex.net>
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ use vars qw{ $revision_ctime $revision_author };
+@@ -119,7 +120,7 @@
+ $rcs_filename =~ s:^$root/::;
+ my $conf = $0;
+ $conf =~ s:[^/\\]+$::;
+-$conf .= "data/cvsgraph.conf";
++$conf .= "/etc/bonsai/cvsgraph.conf";
+ 
+ my @cvsgraph_cmd = (Param("cvsgraph"),
+                     "-c", $conf,
+diff -Naur bonsai/cvsguess.cgi bonsai.fhs/cvsguess.cgi
+--- bonsai/cvsguess.cgi	2004-12-01 09:28:06.000000000 +0100
++++ bonsai.fhs/cvsguess.cgi	2005-12-29 13:08:54.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require 'CGI.pl';
+diff -Naur bonsai/cvsindex.pl bonsai.fhs/cvsindex.pl
+--- bonsai/cvsindex.pl	1999-11-02 00:32:44.000000000 +0100
++++ bonsai.fhs/cvsindex.pl	2005-12-29 13:41:52.000000000 +0100
+@@ -20,6 +20,8 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
++
+ 
+ # Figure out which directory bonsai is in by looking at argv[0]
+ 
+@@ -43,8 +45,8 @@
+ $CVS_REPOS_SUFIX =~ s:/:_:g;
+ 
+ 
+-$CHECKIN_DATA_FILE = "$bonsaidir/data/checkinlog${CVS_REPOS_SUFIX}";
+-$CHECKIN_INDEX_FILE = "$bonsaidir/data/index${CVS_REPOS_SUFIX}";
++$CHECKIN_DATA_FILE = "/var/lib/bonsai/checkinlog${CVS_REPOS_SUFIX}";
++$CHECKIN_INDEX_FILE = "/var/lib/bonsai/index${CVS_REPOS_SUFIX}";
+ 
+ &build_index;
+ &print_keys;
+diff -Naur bonsai/cvslog.cgi bonsai.fhs/cvslog.cgi
+--- bonsai/cvslog.cgi	2004-12-01 18:08:06.000000000 +0100
++++ bonsai.fhs/cvslog.cgi	2005-12-29 13:07:29.000000000 +0100
+@@ -32,6 +32,7 @@
+ #    author - filter based on author
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/cvsmenu.pl bonsai.fhs/cvsmenu.pl
+--- bonsai/cvsmenu.pl	1999-11-02 00:32:47.000000000 +0100
++++ bonsai.fhs/cvsmenu.pl	2005-12-29 13:41:11.000000000 +0100
+@@ -51,7 +51,7 @@
+     print "</ul>\n";
+ };
+ 
+-if (open(EXTRA, "<data/cvsmenuextra")) {
++if (open(EXTRA, "</var/lib/bonsai/cvsmenuextra")) {
+     while (<EXTRA>) {
+         print $_;
+     }
+diff -Naur bonsai/cvsquery.cgi bonsai.fhs/cvsquery.cgi
+--- bonsai/cvsquery.cgi	2005-11-20 23:30:31.000000000 +0100
++++ bonsai.fhs/cvsquery.cgi	2005-12-29 13:44:08.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+@@ -91,8 +92,8 @@
+ my $CVS_REPOS_SUFIX = $::CVS_ROOT;
+ $CVS_REPOS_SUFIX =~ s/\//_/g;
+ 
+-my $CHECKIN_DATA_FILE = "data/checkinlog${CVS_REPOS_SUFIX}";
+-my $CHECKIN_INDEX_FILE = "data/index${CVS_REPOS_SUFIX}";
++my $CHECKIN_DATA_FILE = "/var/lib/bonsai/checkinlog${CVS_REPOS_SUFIX}";
++my $CHECKIN_INDEX_FILE = "/var/lib/bonsai/index${CVS_REPOS_SUFIX}";
+ 
+ 
+ my $SORT_HEAD="bgcolor=\"#DDDDDD\"";
+diff -Naur bonsai/cvsquery.pl bonsai.fhs/cvsquery.pl
+--- bonsai/cvsquery.pl	2004-12-01 09:40:33.000000000 +0100
++++ bonsai.fhs/cvsquery.pl	2005-12-29 13:40:44.000000000 +0100
+@@ -307,7 +307,7 @@
+     $s =~ s/\?/\%3f/g;
+     $s =~ s/\*/\%2a/g;
+ 
+-    $tagfile = "data/taginfo/$cvssuffix/$s";
++    $tagfile = "/var/lib/bonsai/taginfo/$cvssuffix/$s";
+ 
+     open(TAG, "<$tagfile") || die "Unknown tag $tagname";
+     my $result = {};
+diff -Naur bonsai/cvsqueryform.cgi bonsai.fhs/cvsqueryform.cgi
+--- bonsai/cvsqueryform.cgi	2004-12-01 09:28:06.000000000 +0100
++++ bonsai.fhs/cvsqueryform.cgi	2005-12-29 13:43:42.000000000 +0100
+@@ -23,6 +23,7 @@
+ # Query the CVS database.
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require 'CGI.pl';
+@@ -316,7 +317,7 @@
+ 
+ sub fetchCachedStartDate {
+     my ($repository) = @_;
+-    open(CACHE, "<data/cachedstartdates") || return "unknown";
++    open(CACHE, "</var/lib/bonsai/cachedstartdates") || return "unknown";
+     while (<CACHE>) {
+         chop();
+         my($rep,$date,$cachedate) = split(/\|/);
+@@ -347,8 +348,8 @@
+     if ($startdate eq "") {
+         $startdate = "nonexistant";
+     }
+-    open(OUTCACHE, ">data/cachedstartdates.$$") || die "Can't open output date cache file";
+-    if (open(INCACHE, "<data/cachedstartdates")) {
++    open(OUTCACHE, ">/var/lib/bonsai/cachedstartdates.$$") || die "Can't open output date cache file";
++    if (open(INCACHE, "</var/lib/bonsai/cachedstartdates")) {
+         while (<INCACHE>) {
+             chop();
+             my($rep,$date,$cachedate) = split(/\|/);
+@@ -360,5 +361,5 @@
+     }
+     print OUTCACHE "$repository|$startdate|$now\n";
+     close OUTCACHE;
+-    rename "data/cachedstartdates.$$", "data/cachedstartdates";
++    rename "/var/lib/bonsai/cachedstartdates.$$", "/var/lib/bonsai/cachedstartdates";
+ }
+diff -Naur bonsai/cvsview2.cgi bonsai.fhs/cvsview2.cgi
+--- bonsai/cvsview2.cgi	2005-11-13 23:45:54.000000000 +0100
++++ bonsai.fhs/cvsview2.cgi	2005-12-29 13:06:37.000000000 +0100
+@@ -39,6 +39,7 @@
+ # SRCROOTS is an array of repository roots under which to look for CVS files.
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ use CGI;
+diff -Naur bonsai/defparams.pl bonsai.fhs/defparams.pl
+--- bonsai/defparams.pl	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/defparams.pl	2005-12-29 13:38:08.000000000 +0100
+@@ -35,9 +35,9 @@
+             }
+ 	}
+     }
+-    mkdir("data", 0777);
+-    chmod 0777, "data";
+-    my $tmpname = "data/params.$$";
++    mkdir("/var/lib/bonsai", 0777);
++    chmod 0777, "/var/lib/bonsai";
++    my $tmpname = "/var/lib/bonsai/params.$$";
+     open(PARAM_FID, ">$tmpname") || die "Can't create $tmpname";
+     my $v = $::param{'version'};
+     delete $::param{'version'};  # Don't write the version number out to
+@@ -46,8 +46,8 @@
+     $::param{'version'} = $v;
+     print PARAM_FID "1;\n";
+     close PARAM_FID;
+-    rename $tmpname, "data/params" || die "Can't rename $tmpname to data/params";
+-    chmod 0666, "data/params";
++    rename $tmpname, "/var/lib/bonsai/params" || die "Can't rename $tmpname to /var/lib/bonsai/params";
++    chmod 0666, "/var/lib/bonsai/params";
+ }
+     
+ 
+diff -Naur bonsai/doadmin.cgi bonsai.fhs/doadmin.cgi
+--- bonsai/doadmin.cgi	2004-12-01 05:46:35.000000000 +0100
++++ bonsai.fhs/doadmin.cgi	2005-12-29 13:05:24.000000000 +0100
+@@ -21,6 +21,7 @@
+ # Contributor(s): 
+ 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require 'CGI.pl';
+diff -Naur bonsai/doeditcheckin.cgi bonsai.fhs/doeditcheckin.cgi
+--- bonsai/doeditcheckin.cgi	2004-12-01 05:25:22.000000000 +0100
++++ bonsai.fhs/doeditcheckin.cgi	2005-12-29 13:05:30.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require 'CGI.pl';
+diff -Naur bonsai/doeditmessage.cgi bonsai.fhs/doeditmessage.cgi
+--- bonsai/doeditmessage.cgi	2004-12-01 01:40:18.000000000 +0100
++++ bonsai.fhs/doeditmessage.cgi	2005-12-29 13:05:36.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/doeditparams.cgi bonsai.fhs/doeditparams.cgi
+--- bonsai/doeditparams.cgi	2004-12-01 01:15:22.000000000 +0100
++++ bonsai.fhs/doeditparams.cgi	2005-12-29 13:05:46.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): Terry Weissman <terry@mozilla.org>
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require "CGI.pl";
+diff -Naur bonsai/doeditwhiteboard.cgi bonsai.fhs/doeditwhiteboard.cgi
+--- bonsai/doeditwhiteboard.cgi	2004-12-01 01:40:18.000000000 +0100
++++ bonsai.fhs/doeditwhiteboard.cgi	2005-12-29 13:05:52.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require 'CGI.pl';
+diff -Naur bonsai/dotweak.cgi bonsai.fhs/dotweak.cgi
+--- bonsai/dotweak.cgi	2004-12-01 05:25:22.000000000 +0100
++++ bonsai.fhs/dotweak.cgi	2005-12-29 13:05:15.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/editcheckin.cgi bonsai.fhs/editcheckin.cgi
+--- bonsai/editcheckin.cgi	2004-12-01 05:25:22.000000000 +0100
++++ bonsai.fhs/editcheckin.cgi	2005-12-29 13:04:37.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/editmessage.cgi bonsai.fhs/editmessage.cgi
+--- bonsai/editmessage.cgi	2004-12-01 01:40:18.000000000 +0100
++++ bonsai.fhs/editmessage.cgi	2005-12-29 13:04:44.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/editparams.cgi bonsai.fhs/editparams.cgi
+--- bonsai/editparams.cgi	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/editparams.cgi	2005-12-29 13:04:51.000000000 +0100
+@@ -21,6 +21,7 @@
+ # Contributor(s): Terry Weissman <terry@mozilla.org>
+ 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require "CGI.pl";
+diff -Naur bonsai/editwhiteboard.cgi bonsai.fhs/editwhiteboard.cgi
+--- bonsai/editwhiteboard.cgi	2004-12-01 01:40:18.000000000 +0100
++++ bonsai.fhs/editwhiteboard.cgi	2005-12-29 13:04:59.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/globals.pl bonsai.fhs/globals.pl
+--- bonsai/globals.pl	2005-11-25 20:47:28.000000000 +0100
++++ bonsai.fhs/globals.pl	2005-12-29 13:35:28.000000000 +0100
+@@ -73,14 +73,14 @@
+      }
+ 
+      # Um, maybe we haven't sourced in the params at all yet.
+-     if (stat("data/params")) {
++     if (stat("/var/lib/bonsai/params")) {
+           # Write down and restore the version # here.  That way, we
+           # get around anyone who maliciously tries to tweak the
+           # version number by editing the params file.  Not to mention
+           # that in 2.0, there was a bug that wrote the version number
+           # out to the params file...
+           my $v = $::param{'version'};
+-          require "data/params";
++          require "/var/lib/bonsai/params";
+           $::param{'version'} = $v;
+      }
+      if (defined $::param{$value}) {
+@@ -281,16 +281,16 @@
+ sub Lock {
+     if ($::lockcount <= 0) {
+         $::lockcount = 0;
+-        if (!open(LOCKFID, ">>data/lock")) {
+-            mkdir "data", 0777;
+-            chmod 0777, "data";
+-            open(LOCKFID, ">>data/lock") || die "Can't open lockfile.";
++        if (!open(LOCKFID, ">>/var/lib/bonsai/lock")) {
++            mkdir "/var/lib/bonsai", 0777;
++            chmod 0777, "/var/lib/bonsai";
++            open(LOCKFID, ">>/var/lib/bonsai/lock") || die "Can't open lockfile.";
+         }
+         my $val = flock(LOCKFID,2);
+         if (!$val) { # '2' is magic 'exclusive lock' const.
+             print "Lock failed: $val\n";
+         }
+-        chmod 0666, "data/lock";
++        chmod 0666, "/var/lib/bonsai/lock";
+     }
+     $::lockcount++;
+ }
+@@ -318,10 +318,10 @@
+     my ($str) = (@_);
+     local (*LOGFID);
+ 
+-    LockOpen(\*LOGFID, ">>data/log", "Can't write to data/log");
++    LockOpen(\*LOGFID, ">>/var/lib/bonsai/log", "Can't write to data/log");
+     print LOGFID time2str("%Y-%m-%d %H:%M", time()) . ": $str\n";
+     close LOGFID;
+-    chmod 0666, "data/log";
++    chmod 0666, "/var/lib/bonsai/log";
+     Unlock();
+ }
+ 
+@@ -512,9 +512,9 @@
+      my $dir;
+ 
+      if ($::TreeID eq "default") {
+-          $dir = "data";
++          $dir = "/var/lib/bonsai";
+      } else {
+-          $dir = "data/$::TreeID";
++          $dir = "/var/lib/bonsai/$::TreeID";
+      }
+ 
+      # Make sure it exists...
+@@ -531,7 +531,7 @@
+     return
+          if (@::TreeList > 0);
+ 
+-    require 'data/treeconfig.pl';
++    require '/etc/bonsai/treeconfig.pl';
+ }
+ 
+ 
+@@ -877,8 +877,8 @@
+ 
+ sub MailDiffs {
+      my ($name, $oldstr, $newstr) = @_;
+-     my $old_file = "data/old-$name.$$";
+-     my $new_file = "data/new-$name.$$";
++     my $old_file = "/var/lib/bonsai/old-$name.$$";
++     my $new_file = "/var/lib/bonsai/new-$name.$$";
+      my $diff_text = '';
+ 
+      return
+@@ -963,7 +963,7 @@
+ sub CheckGlobalPassword {
+      my ($password, $encoded) = @_;
+ 
+-     my $correct = trim(`cat data/passwd`);
++     my $correct = trim(`cat /var/lib/bonsai/passwd`);
+      $encoded = crypt($password, "aa")
+           unless ($encoded);
+ 
+@@ -1109,7 +1109,7 @@
+ 
+     $name =~ s:///*:/:g;        # Remove any multiple slashes.
+     if (!defined @::HideList) {
+-        if (open(HIDE, "<data/hidelist")) {
++        if (open(HIDE, "</var/lib/bonsai/hidelist")) {
+             while (<HIDE>) {
+                 chop;
+                 $_ = trim($_);
+@@ -1197,7 +1197,7 @@
+      return $result
+           unless ($ldapserver);
+ 
+-     unless (open(LDAP, "./data/ldapsearch " .
++     unless (open(LDAP, "/var/lib/bonsai/ldapsearch " .
+                   "-b \"dc=netscape,dc=com\" " .
+                   "-h $ldapserver -p $ldapport " .
+                   "-s sub \"(mail=$name\@netscape.com)\" " .
+diff -Naur bonsai/handleAdminMail.pl bonsai.fhs/handleAdminMail.pl
+--- bonsai/handleAdminMail.pl	2005-11-28 12:38:35.000000000 +0100
++++ bonsai.fhs/handleAdminMail.pl	2005-12-29 13:33:59.000000000 +0100
+@@ -21,6 +21,7 @@
+ # Contributor(s): 
+ 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ use Cwd;
+ 
+@@ -35,7 +36,7 @@
+     chdir($bonsaidir);
+ }
+ 
+-my $filename = "data/admin.$$";
++my $filename = "/var/lib/bonsai/admin.$$";
+ unlink($filename);
+ 
+ die "Cannot Open data file (cwd: ". cwd() . "; $filename): $!\n"
+diff -Naur bonsai/handleCheckinMail.pl bonsai.fhs/handleCheckinMail.pl
+--- bonsai/handleCheckinMail.pl	2005-11-28 12:38:35.000000000 +0100
++++ bonsai.fhs/handleCheckinMail.pl	2005-12-29 13:40:13.000000000 +0100
+@@ -21,6 +21,7 @@
+ # Contributor(s): 
+ 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ use Cwd;
+ 
+@@ -35,7 +36,7 @@
+     chdir($bonsaidir);
+ }
+ 
+-my $filename = "data/temp.$$";
++my $filename = "/var/lib/bonsai/temp.$$";
+ unlink($filename);
+ 
+ die "Cannot Open data file (cwd: ". cwd() . "; $filename): $!\n"
+diff -Naur bonsai/header.pl bonsai.fhs/header.pl
+--- bonsai/header.pl	2002-06-08 12:43:08.000000000 +0200
++++ bonsai.fhs/header.pl	2005-12-29 13:37:02.000000000 +0100
+@@ -29,10 +29,7 @@
+     print "<BODY   BGCOLOR=\"#FFFFFF\" TEXT=\"#000000\"";
+     print "LINK=\"#0000EE\" VLINK=\"#551A8B\" ALINK=\"#FF0000\">";
+ 
+-    if (open(BANNER, "<data/banner.html")) {
+-        while (<BANNER>) { print; }
+-        close BANNER;
+-    } elsif (open(BANNER, "<../bonsai/data/banner.html")) {
++    if (open(BANNER, "</var/lib/bonsai/banner.html")) {
+         while (<BANNER>) { print; }
+         close BANNER;
+     }
+@@ -50,7 +47,7 @@
+     print "  </TD>\n";
+     print "  <TD>\n";
+ 
+-    if (open(BLURB, "<data/blurb")) {
++    if (open(BLURB, "</var/lib/bonsai/blurb")) {
+         while (<BLURB>) { print; }
+         close BLURB;
+     }
+diff -Naur bonsai/indextest.pl bonsai.fhs/indextest.pl
+--- bonsai/indextest.pl	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/indextest.pl	2005-12-29 13:35:56.000000000 +0100
+@@ -31,8 +31,8 @@
+ $CVS_REPOS_SUFIX = $::CVS_ROOT;
+ $CVS_REPOS_SUFIX =~ s/\//_/g;
+ 
+-my $CHECKIN_DATA_FILE = "data/checkinlog${CVS_REPOS_SUFIX}";
+-my $CHECKIN_INDEX_FILE = "data/index${CVS_REPOS_SUFIX}";
++my $CHECKIN_DATA_FILE = "/var/lib/bonsai/checkinlog${CVS_REPOS_SUFIX}";
++my $CHECKIN_INDEX_FILE = "/var/lib/bonsai/index${CVS_REPOS_SUFIX}";
+ 
+ 
+     open(INDEX , "<$CHECKIN_INDEX_FILE");
+diff -Naur bonsai/moduleanalyse.cgi bonsai.fhs/moduleanalyse.cgi
+--- bonsai/moduleanalyse.cgi	2004-12-01 07:35:28.000000000 +0100
++++ bonsai.fhs/moduleanalyse.cgi	2005-12-29 13:04:11.000000000 +0100
+@@ -24,6 +24,7 @@
+ # Unroll a module
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/multidiff.cgi bonsai.fhs/multidiff.cgi
+--- bonsai/multidiff.cgi	2004-12-01 09:40:33.000000000 +0100
++++ bonsai.fhs/multidiff.cgi	2005-12-29 13:04:03.000000000 +0100
+@@ -25,6 +25,7 @@
+ # Multi file diff cgi
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ use CGI::Carp qw(fatalsToBrowser);
+ 
+diff -Naur bonsai/processqueue.pl bonsai.fhs/processqueue.pl
+--- bonsai/processqueue.pl	1999-11-02 00:32:57.000000000 +0100
++++ bonsai.fhs/processqueue.pl	2005-12-29 13:35:14.000000000 +0100
+@@ -29,9 +29,11 @@
+ # second line (currently unused), and the data fed to loginfo as the remaining
+ # lines.
+ 
+-$inprocess = "data/queue/processing-$$";
++use lib '/usr/share/bonsai/lib';
+ 
+-foreach $file (sort(glob("data/queue/*.q"))) {
++$inprocess = "/var/lib/bonsai/queue/processing-$$";
++
++foreach $file (sort(glob("/var/lib/bonsai/queue/*.q"))) {
+     rename $file, $inprocess || die "Couldn't rename queue file.";
+     system "./dolog.pl < $inprocess";
+     rename $inprocess, "$file.done";
+diff -Naur bonsai/rebuildcvshistory.cgi bonsai.fhs/rebuildcvshistory.cgi
+--- bonsai/rebuildcvshistory.cgi	2005-04-03 01:53:46.000000000 +0200
++++ bonsai.fhs/rebuildcvshistory.cgi	2005-12-29 13:03:52.000000000 +0100
+@@ -19,6 +19,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/repophook.cgi bonsai.fhs/repophook.cgi
+--- bonsai/repophook.cgi	2004-12-01 09:28:06.000000000 +0100
++++ bonsai.fhs/repophook.cgi	2005-12-29 13:03:42.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'CGI.pl';
+ 
+ use strict;
+diff -Naur bonsai/reposfiles.pl bonsai.fhs/reposfiles.pl
+--- bonsai/reposfiles.pl	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/reposfiles.pl	2005-12-29 13:13:30.000000000 +0100
+@@ -21,6 +21,7 @@
+ # Contributor(s): 
+ 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ if( $ARGV[0] eq '' ){
+diff -Naur bonsai/rview.cgi bonsai.fhs/rview.cgi
+--- bonsai/rview.cgi	2005-11-18 21:30:28.000000000 +0100
++++ bonsai.fhs/rview.cgi	2005-12-29 13:03:26.000000000 +0100
+@@ -25,6 +25,7 @@
+ # Query the CVS database.
+ #
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/showcheckins.cgi bonsai.fhs/showcheckins.cgi
+--- bonsai/showcheckins.cgi	2004-12-01 05:46:35.000000000 +0100
++++ bonsai.fhs/showcheckins.cgi	2005-12-29 13:02:43.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ require 'CGI.pl';
+diff -Naur bonsai/switchtree.cgi bonsai.fhs/switchtree.cgi
+--- bonsai/switchtree.cgi	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/switchtree.cgi	2005-12-29 13:02:06.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ use strict;
+ 
+ # Shut up misguided -w warnings about "used only once".  "use vars" just
+diff -Naur bonsai/testlock.pl bonsai.fhs/testlock.pl
+--- bonsai/testlock.pl	1998-06-16 23:43:07.000000000 +0200
++++ bonsai.fhs/testlock.pl	2005-12-29 13:12:50.000000000 +0100
+@@ -1,6 +1,7 @@
+ #!/usr/bonsaitools/bin/perl --
+ # -*- Mode: perl; indent-tabs-mode: nil -*-
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'utils.pl';
+ 
+ Lock();
+diff -Naur bonsai/toplevel.cgi bonsai.fhs/toplevel.cgi
+--- bonsai/toplevel.cgi	2004-09-23 06:43:46.000000000 +0200
++++ bonsai.fhs/toplevel.cgi	2005-12-29 13:34:23.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'CGI.pl';
+ 
+ use strict;
+@@ -264,7 +265,7 @@
+      $query .= ")";
+      return if ($ldaperror || ($ldapserver eq ''));
+ 
+-     $ldapcmd = "./data/ldapsearch -b \"dc=netscape,dc=com\" " .
++     $ldapcmd = "/var/lib/bonsai/ldapsearch -b \"dc=netscape,dc=com\" " .
+                 "-h $ldapserver -p $ldapport -s sub " .
+                 "-S mail \"$query\" mail cn nscpcurcontactinfo";
+      unless (open(LDAP, "$ldapcmd |")) {
+diff -Naur bonsai/utils.pl bonsai.fhs/utils.pl
+--- bonsai/utils.pl	1999-11-02 00:33:00.000000000 +0100
++++ bonsai.fhs/utils.pl	2005-12-29 13:34:45.000000000 +0100
+@@ -31,16 +31,16 @@
+ sub Lock {
+     if ($lockcount <= 0) {
+         $lockcount = 0;
+-        if (!open(LOCKFID, ">>data/lockfile")) {
+-            mkdir "data", 0777;
+-            chmod 0777, "data";
+-            open(LOCKFID, ">>data/lockfile") || die "Can't open lockfile.";
++        if (!open(LOCKFID, ">>/var/lib/bonsai/lockfile")) {
++            mkdir "/var/lib/bonsai", 0777;
++            chmod 0777, "/var/lib/bonsai";
++            open(LOCKFID, ">>/var/lib/bonsai/lockfile") || die "Can't open lockfile.";
+         }
+         my $val = flock(LOCKFID,2);
+         if (!$val) { # '2' is magic 'exclusive lock' const.
+             print "Lock failed: $val\n";
+         }
+-        chmod 0666, "data/lockfile";
++        chmod 0666, "/var/lib/bonsai/lockfile";
+     }
+     $lockcount++;
+ }
+@@ -57,16 +57,16 @@
+ sub loadConfigData {
+     if (@treelist > 0) {return;}
+     local($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+-     $atime,$pmtime,$ctime,$blksize,$blocks) = stat("data/configdata.pl");
++     $atime,$pmtime,$ctime,$blksize,$blocks) = stat("/var/lib/bonsai/configdata.pl");
+     local $tmtime;
+     ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+-     $atime,$tmtime,$ctime,$blksize,$blocks) = stat("data/configdata");
++     $atime,$tmtime,$ctime,$blksize,$blocks) = stat("/var/lib/bonsai/configdata");
+ 
+     if ($pmtime eq "" || $pmtime < $tmtime) {
+         system "./perlifyconfig.tcl";
+     }
+ 
+-    open(CONFIGDATA, "<data/configdata.pl") || die "Can't open configdata.pl";
++    open(CONFIGDATA, "</var/lib/bonsai/configdata.pl") || die "Can't open configdata.pl";
+     while (<CONFIGDATA>) {
+         eval;
+     }
+@@ -140,7 +140,7 @@
+     my ($name) = (@_);
+     $name =~ s:///*:/:g;        # Remove any multiple slashes.
+     if (!defined @hidelist) {
+-        if (open(HIDE, "<data/hidelist")) {
++        if (open(HIDE, "</var/lib/bonsai/hidelist")) {
+             while (<HIDE>) {
+                 chop;
+                 s/^\s*//g;      # Strip leading whitespace
+diff -Naur bonsai/viewold.cgi bonsai.fhs/viewold.cgi
+--- bonsai/viewold.cgi	2004-12-01 01:43:28.000000000 +0100
++++ bonsai.fhs/viewold.cgi	2005-12-29 13:00:55.000000000 +0100
+@@ -27,6 +27,7 @@
+     $z = $::FORM;
+ }
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'CGI.pl';
+ 
+ use strict;
+diff -Naur bonsai/whohastouchedwhat.cgi bonsai.fhs/whohastouchedwhat.cgi
+--- bonsai/whohastouchedwhat.cgi	2004-09-18 07:02:17.000000000 +0200
++++ bonsai.fhs/whohastouchedwhat.cgi	2005-12-29 13:00:30.000000000 +0100
+@@ -20,6 +20,7 @@
+ #
+ # Contributor(s): 
+ 
++use lib '/usr/share/bonsai/lib';
+ require 'lloydcgi.pl';
+ require 'utils.pl';
+ 
