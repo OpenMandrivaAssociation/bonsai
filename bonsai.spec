@@ -1,9 +1,13 @@
 %define name		bonsai
 %define version		1.3.9
 %define snapshot	20051228
-%define release		%mkrel 0.%{snapshot}.7
+%define release		%mkrel 0.%{snapshot}.8
 
+%if %{_use_internal_dependency_generator}
+%define __noautoreq 'perl\\(CGI.pl.*|perl\\(SourceChecker.*'
+%else
 %define _requires_exceptions perl(\\(CGI.pl\\|SourceChecker\\))
+%endif
 
 Name:		%{name}
 Version:	%{version}
@@ -16,12 +20,7 @@ Source0:	%{name}-%{snapshot}.tar.bz2
 Source1:	%{name}.README.mdk.bz2
 Patch0:		%{name}-20051228.fhs.patch
 Requires:	perl-DBD-mysql
-%if %mdkversion < 201010
-Requires(post):   rpm-helper
-Requires(postun):   rpm-helper
-%endif
 BuildArch:	noarch
-BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 Bonsai is a really cool idea on how to "see" changes taking place during a
