@@ -1,7 +1,7 @@
 %define name		bonsai
 %define version		1.3.9
 %define snapshot	20051228
-%define release		%mkrel 0.%{snapshot}.8
+%define release		%mkrel 0.%{snapshot}.9
 
 %if %{_use_internal_dependency_generator}
 %define __noautoreq 'perl\\(CGI.pl.*|perl\\(SourceChecker.*'
