@@ -1,7 +1,4 @@
-%define name		bonsai
-%define version		1.3.9
 %define snapshot	20051228
-%define release		%mkrel 0.%{snapshot}.9
 
 %if %{_use_internal_dependency_generator}
 %define __noautoreq 'perl\\(CGI.pl.*|perl\\(SourceChecker.*'
@@ -9,9 +6,9 @@
 %define _requires_exceptions perl(\\(CGI.pl\\|SourceChecker\\))
 %endif
 
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:		bonsai
+Version:	1.3.9
+Release:	0.%{snapshot}.10
 Summary:	A query interface to the CVS source repository
 License:	MPL
 Group:		Networking/WWW
@@ -42,8 +39,6 @@ find . -type f | xargs perl -pi -e "s|/usr/bonsaitools/bin|%{_bindir}|g"
 %build
 
 %install
-rm -rf %{buildroot}
-
 install -d -m 755 %{buildroot}%{_var}/www/%{name}
 install -m 755 *.cgi %{buildroot}%{_var}/www/%{name}
 cp -pr *.html *.gif robots.txt %{buildroot}%{_var}/www/%{name}
@@ -104,60 +99,17 @@ Alias /%{name} %{_var}/www/%{name}
 <Directory %{_var}/www/%{name}>
     Options ExecCGI
     DirectoryIndex toplevel.cgi
-    Allow from all
+    Require all granted
 </Directory>
 EOF
 
 %clean
-rm -rf %{buildroot}
-
 
 
 %files
-%defattr(-,root,root)
 %doc README INSTALL CHANGES
 %config(noreplace) %{_webappconfdir}/%{name}.conf
 %config(noreplace) %{_sysconfdir}/%{name}
 %{_var}/www/%{name}
 %{_datadir}/%{name}
 %attr(-,apache,apache) %{_localstatedir}/lib/%{name}
-
-
-%changelog
-* Sun Dec 05 2010 Oden Eriksson <oeriksson@mandriva.com> 1.3.9-0.20051228.7mdv2011.0
-+ Revision: 610083
-- rebuild
-
-* Mon Mar 01 2010 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.9-0.20051228.6mdv2010.1
-+ Revision: 513150
-- rely on filetrigger for reloading apache configuration begining with 2010.1, rpm-helper macros otherwise
-
-* Wed Sep 02 2009 Thierry Vignaud <tv@mandriva.org> 1.3.9-0.20051228.5mdv2010.0
-+ Revision: 424668
-- rebuild
-
-* Mon Jun 02 2008 Pixel <pixel@mandriva.com> 1.3.9-0.20051228.4mdv2009.0
-+ Revision: 214231
-- adapt to %%_localstatedir now being /var instead of /var/lib (#22312)
-
-  + Olivier Blin <oblin@mandriva.com>
-    - restore BuildRoot
-
-* Tue Dec 18 2007 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.9-0.20051228.4mdv2008.1
-+ Revision: 132400
-- rebuild
-
-  + Thierry Vignaud <tv@mandriva.org>
-    - kill re-definition of %%buildroot on Pixel's request
-    - import bonsai
-
-
-* Fri Jun 30 2006 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.9-0.20051228.3mdv2007.0
-- relax buildrequires versionning
-
-* Mon Jun 26 2006 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.9-0.20051228.2mdv2007.0
-- new webapp macros
-- decompress patch
-
-* Thu Dec 29 2005 Guillaume Rousse <guillomovitch@mandriva.org> 1.3.9-0.20051228.1mdk
-- first mdk release 
