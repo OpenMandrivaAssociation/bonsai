@@ -1,11 +1,11 @@
-%define snapshot 20220107
+#define snapshot 20220107
 
 Name:		bonsai
-Version:	0.0.1
+Version:	1.0.2
 Release:	%{?snapshot:0.%{snapshot}.}1
 Summary:	Git repository manager for Plasma Mobile
 URL:    	https://mauikit.org
-Source0:	https://invent.kde.org/maui/%{name}/-/archive/%{?snapshot:master}%{!?snapshot:v%{version}}/%{name}-%{?snapshot:master}%{!?snapshot:v%{version}}.tar.bz2%{?snapshot:#/%{name}-%{snapshot}.tar.bz2}
+Source0:	https://invent.kde.org/maui/bonsai/-/archive/%{?snapshot:master}%{!?snapshot:v%{version}}/%{name}-%{?snapshot:master}%{!?snapshot:v%{version}}.tar.bz2%{?snapshot:#/%{name}-%{snapshot}.tar.bz2}
 License:	GPLv3
 Group:		Development/Tools
 BuildRequires:	cmake
