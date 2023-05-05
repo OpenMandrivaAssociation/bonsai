@@ -44,9 +44,11 @@ Git repository manager for Plasma Mobile
 %install
 %ninja_install -C build
 
-%files
+%find_lang bonsai
+
+%files -f bonsai.lang
 %{_bindir}/bonsai
 %{_libdir}/libGitWrap.so
-#{_datadir}/applications/org.maui.bonsai.desktop
+%{_datadir}/applications/org.kde.bonsai.desktop
 %{_datadir}/icons/hicolor/scalable/apps/bonsai.svg
-#{_datadir}/metainfo/org.maui.bonsai.appdata.xml
+%{_datadir}/metainfo/org.kde.bonsai.appdata.xml
