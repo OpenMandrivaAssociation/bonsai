@@ -49,7 +49,7 @@ Git repository manager for Plasma Mobile
 
 %files -f bonsai.lang
 %{_bindir}/bonsai
-%{_libdir}/libGitWrap.so
+#{_libdir}/libGitWrap.so
 %{_datadir}/applications/org.kde.bonsai.desktop
 %{_datadir}/icons/hicolor/scalable/apps/bonsai.svg
 %{_datadir}/metainfo/org.kde.bonsai.appdata.xml
