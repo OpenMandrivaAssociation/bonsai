@@ -1,7 +1,7 @@
 #define snapshot 20220107
 
 Name:		bonsai
-Version:	1.0.2
+Version:	1.1.0
 Release:	%{?snapshot:0.%{snapshot}.}1
 Summary:	Git repository manager for Plasma Mobile
 URL:    	https://mauikit.org
