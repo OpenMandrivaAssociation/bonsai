@@ -23,6 +23,7 @@ BuildRequires:	cmake(KF5I18n)
 BuildRequires:	cmake(KF5CoreAddons)
 BuildRequires:	cmake(MauiKit3)
 BuildRequires:  cmake(MauiKitFileBrowsing3)
+BuildRequires:  cmake(MauiKitTerminal3)
 BuildRequires:	gettext
 BuildRequires:	pkgconfig(libgit2)
 BuildRequires:	cmake(Qt5QuickCompiler)
