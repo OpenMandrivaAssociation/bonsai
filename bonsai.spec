@@ -1,7 +1,7 @@
 #define snapshot 20220107
 
 Name:		bonsai
-Version:	1.1.0
+Version:	1.1.2
 Release:	%{?snapshot:0.%{snapshot}.}1
 Summary:	Git repository manager for Plasma Mobile
 URL:    	https://mauikit.org
@@ -21,8 +21,8 @@ BuildRequires:	cmake(Qt5QuickControls2)
 BuildRequires:	cmake(Qt5Xml)
 BuildRequires:	cmake(KF5I18n)
 BuildRequires:	cmake(KF5CoreAddons)
-BuildRequires:	cmake(MauiKit)
-BuildRequires:  cmake(MauiKitFileBrowsing)
+BuildRequires:	cmake(MauiKit3)
+BuildRequires:  cmake(MauiKitFileBrowsing3)
 BuildRequires:	gettext
 BuildRequires:	pkgconfig(libgit2)
 BuildRequires:	cmake(Qt5QuickCompiler)
